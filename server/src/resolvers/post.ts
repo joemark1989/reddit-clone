@@ -9,7 +9,7 @@ export class PostResolver {
     return em.find(Post, {});
   }
   @Query(() => Post, { nullable: true })
-  // Arg("id") the ID can be changed to whatever you want, it will reflect the name you put in localhost:3000/graphql.
+  // Arg("id") the ID can be changed to whatever you want, it will reflect the name you put in localhost:4000/graphql.
   post(@Arg("id") id: number, @Ctx() { em }: MyContext): Promise<Post | null> {
     return em.findOne(Post, { id });
   }
