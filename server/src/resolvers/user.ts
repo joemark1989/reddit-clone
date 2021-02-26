@@ -35,6 +35,42 @@ class UserResponse {
 
 @Resolver()
 export class UserResolver {
+  @Mutation(() => UserResponse)
+  async changePassword(
+    @Arg("token") token: string,
+    @Arg("newPassword") newPassword: string,
+    @Ctx() { redis, em, req }: MyContext
+  ): Promise<UserResponse> {
+    if (newPassword.length <= 2) {
+      return {
+        errors: [
+          { field: "newPassword", message: "length must be greater than 2" },
+        ],
+      };
+    }
+    const key = FORGET_PASSWORD_PREFIX + token;
+    const userId = await redis.get(key);
+    if (!userId) {
+      return {
+        errors: [{ field: "token", message: "token expired" }],
+      };
+    }
+    const user = await em.findOne(User, { id: +userId });
+    if (!user) {
+      return {
+        errors: [{ field: "token", message: "user no longer exists" }],
+      };
+    }
+    // at the end if all checks pass, change the password and log user in.
+    user.password = await argon2.hash(newPassword);
+    await em.persistAndFlush(user);
+    // delete token key
+    await redis.del(key);
+    // this is where it logs the user in if you want the user to type the PW again....
+    req.session.userId = user.id; // Then Remove this line
+    return { user };
+  }
+
   @Mutation(() => Boolean)
   async forgotPassword(
     @Arg("email") email: string,
@@ -55,7 +91,7 @@ export class UserResolver {
     );
     await sendEmail(
       email,
-      `<a href="http://localhost:3000/${token}">reset password</a>`
+      `<a href="http://localhost:3000/change-password/${token}">reset password</a>`
     );
     return true;
   }
