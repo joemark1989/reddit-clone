@@ -1,0 +1,8 @@
+me -> browse http://localhost:3000
+-> next.js server
+-> request graphql server localhost:4000
+-> building the HTML
+-> sending back to your browser
+
+under pages > change-password the [token].tsx is on purpose it tells Next.js there is a token in the query param.
+

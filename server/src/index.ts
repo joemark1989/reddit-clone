@@ -13,6 +13,7 @@ import cors from "cors";
 import { createConnection } from "typeorm";
 import { Post } from "./entities/Post";
 import { User } from "./entities/User";
+import path from "path";
 
 const main = async () => {
   // creates the connection to db
@@ -23,8 +24,14 @@ const main = async () => {
     username: "postgres",
     password: "password",
     synchronize: true,
+    migrations: [path.join(__dirname, "./migrations/*")],
     entities: [Post, User],
   });
+
+  // this runs migrations manually
+  await conn.runMigrations();
+
+  //await Post.delete({});
 
   const app = express();
   const RedisStore = connectRedis(session);

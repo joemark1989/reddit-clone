@@ -6,20 +6,14 @@ import React from "react";
 import { InputField } from "../components/InputField";
 import { Layout } from "../components/Layout";
 import { TextAreaBox } from "../components/TextAreaField";
-import { useCreatePostMutation, useMeQuery } from "../generated/graphql";
+import { useCreatePostMutation } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
+import { useIsAuth } from "../utils/useIsAuth";
 
 const CreatePost: React.FC<{}> = ({}) => {
   const [, createPost] = useCreatePostMutation();
+  useIsAuth();
   const router = useRouter();
-  const [{ data, fetching }] = useMeQuery();
-
-  React.useEffect(() => {
-    if (!fetching && !data?.me) {
-      router.replace("/login");
-    }
-  }, [fetching, data, router]);
-
   return (
     <Layout variant="small">
       <Formik

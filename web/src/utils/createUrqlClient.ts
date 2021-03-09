@@ -1,5 +1,10 @@
-import { cacheExchange } from "@urql/exchange-graphcache";
-import { dedupExchange, Exchange, fetchExchange } from "urql";
+import { cacheExchange, Resolver } from "@urql/exchange-graphcache";
+import {
+  dedupExchange,
+  Exchange,
+  fetchExchange,
+  stringifyVariables,
+} from "urql";
 import {
   LogoutMutation,
   MeQuery,
@@ -10,6 +15,7 @@ import {
 import { betterUpdateQuery } from "./betterUpdateQuery";
 import { pipe, tap } from "wonka";
 import Router from "next/router";
+import { fieldInfoOfKey } from "@urql/exchange-graphcache/dist/types/store";
 
 const errorExchange: Exchange = ({ forward }) => (ops$) => {
   return pipe(
@@ -22,12 +28,45 @@ const errorExchange: Exchange = ({ forward }) => (ops$) => {
   );
 };
 
+// this simply gets the data from the cache and paginates it.
+
+const cursorPagination = (): Resolver => {
+  return (_parent, fieldArgs, cache, info) => {
+    const { parentKey: entityKey, fieldName } = info;
+    const allFields = cache.inspectFields(entityKey);
+    console.log(allFields);
+    const fieldInfos = allFields.filter((info) => info.fieldName === fieldName);
+    const size = fieldInfos.length;
+    if (size === 0) {
+      return undefined;
+    }
+
+    const fieldKey = `${fieldName}(${stringifyVariables(fieldArgs)})`;
+    const isItInTheCache = cache.resolve(entityKey, fieldKey);
+    info.partial = !isItInTheCache;
+    const results: string[] = [];
+    fieldInfos.forEach((fi) => {
+      const data = cache.resolve(entityKey, fi.fieldKey) as any;
+      results.push(...data);
+    });
+    return results;
+  };
+};
+
+// resolvers:{Query:{posts:cursorPagination()}} this is called a client side resolver and will run everytime the query will run
+// and you can alter how the query looks if needed, and the name posts is what matches posts.graphql file.
+
 export const createUrqlClient = (ssrExchange: any) => ({
   url: "http://localhost:4000/graphql",
   fetchOptions: { credentials: "include" as const },
   exchanges: [
     dedupExchange,
     cacheExchange({
+      resolvers: {
+        Query: {
+          posts: cursorPagination(),
+        },
+      },
       updates: {
         Mutation: {
           logout: (_result, args, cache, info) => {
