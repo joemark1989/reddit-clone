@@ -1,26 +1,27 @@
-import { withUrqlClient } from "next-urql";
-import { Layout } from "../components/Layout";
-import { usePostsQuery } from "../generated/graphql";
-import { createUrqlClient } from "../utils/createUrqlClient";
 import {
   Box,
+  Button,
+  Flex,
   Heading,
+  Icon,
   Link,
   Stack,
   Text,
-  Flex,
-  Button,
 } from "@chakra-ui/react";
+import { withUrqlClient } from "next-urql";
 import NextLink from "next/link";
 import React from "react";
+import { Layout } from "../components/Layout";
+import { usePostsQuery } from "../generated/graphql";
+import { createUrqlClient } from "../utils/createUrqlClient";
 
 const Index = () => {
-  const [variables, setVariables] = React.useState({
-    limit: 10,
+  const [post, setPost] = React.useState({
+    limit: 15,
     cursor: null as string | null,
   });
   const [{ data, fetching }] = usePostsQuery({
-    variables,
+    variables: post,
   });
 
   if (!fetching && !data) {
@@ -42,21 +43,26 @@ const Index = () => {
         <div>loading...</div>
       ) : (
         <Stack>
-          {data!.posts.map((x) => (
-            <Box p={5} key={x.id} shadow="md" borderWidth="1px">
-              <Heading fontSize="xl">{x.title}</Heading>
-              <Text mt={4}>{x.textSnippet}</Text>
-            </Box>
+          {data!.posts.posts.map((x) => (
+            <Flex p={5} key={x.id} shadow="md" borderWidth="1px">
+              <Box>
+                <Icon name="chevron-up"></Icon>
+                <Icon></Icon>
+                <Heading fontSize="xl">{x.title}</Heading>
+                <Text mt={2}>{x.creator.username}</Text>
+                <Text mt={4}>{x.textSnippet}</Text>
+              </Box>
+            </Flex>
           ))}
         </Stack>
       )}
-      {data ? (
+      {data && data.posts.hasMore ? (
         <Flex>
           <Button
             onClick={() => {
-              setVariables({
-                limit: variables.limit,
-                cursor: data.posts[data.posts.length - 1].createdAt,
+              setPost({
+                limit: post.limit,
+                cursor: data.posts.posts[data.posts.posts.length - 1].createdAt,
               });
             }}
             isLoading={fetching}

@@ -16,6 +16,7 @@ import {
 } from "type-graphql";
 import { Post } from "../entities/Post";
 import { getConnection } from "typeorm";
+// import { Updoot } from "../entities/Updoot";
 
 @InputType()
 class PostInput {
@@ -42,7 +43,6 @@ class PaginatedPosts {
 // When you set something nullable you also must set the type
 // orderBy('"createdAt"') this needs '' and "" because Postgres changed the A to be lowercase.
 // Also you can do desc like this... orderBy('"createdAt"', "DESC")
-//
 @Resolver(Post)
 export class PostResolver {
   @FieldResolver(() => String)
@@ -50,21 +50,78 @@ export class PostResolver {
     return root.text.slice(0, 50);
   }
 
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuth)
+  async vote(
+    @Arg("postId", () => Int) postId: number,
+    @Arg("value", () => Int) value: number,
+    @Ctx() { req }: MyContext
+  ) {
+    const { userId } = req.session;
+    const isUpdoot = value !== -1;
+    const realValue = isUpdoot ? 1 : -1;
+    // await Updoot.insert({
+    //   userId,
+    //   postId,
+    //   value: realValue,
+    // });
+    await getConnection().query(
+      `
+      START TRANSACTION;
+
+      insert into updoot ("userId", "postId", value)
+      values(${userId},${postId},${realValue});
+
+      update post
+      set points = points + ${realValue}
+      where id = ${postId};
+      
+      COMMIT;
+    `
+    );
+    return true;
+  }
+
   @Query(() => PaginatedPosts)
-  posts(
+  async posts(
     @Arg("limit", () => Int) limit: number,
     @Arg("cursor", () => String, { nullable: true }) cursor: string | null
   ): Promise<PaginatedPosts> {
-    const realLimit = Math.min(50, limit) + 1;
-    const qb = getConnection()
-      .getRepository(Post)
-      .createQueryBuilder("p")
-      .orderBy('"createdAt"', "DESC")
-      .take(realLimit);
+    const realLimit = Math.min(50, limit);
+    const realLimitPlusOne = realLimit + 1;
+
+    const replacements: any[] = [realLimitPlusOne];
+
     if (cursor) {
-      qb.where('"createdAt" < :cursor', { cursor: new Date(+cursor) });
+      replacements.push(new Date(+cursor));
     }
-    return { posts: await qb.getMany(), hasMore: true };
+
+    // in psql there can be multiple schemas inside a db
+    // in this case you may have to use public.nameOfSchemaVariable in this case mine was public.user
+
+    const posts = await getConnection().query(
+      `
+        select p.*,
+        json_build_object(
+          'id', u.id,
+          'username', u.username,
+          'email', u.email,
+          'createdAt', u."createdAt",
+          'updatedAt', u."updatedAt"
+        ) creator
+        from post p
+        inner join public.user u on u.id = p."creatorId"
+        ${cursor ? `where p."createdAt" < $2` : ""}
+        order by p."createdAt" DESC
+        limit $1
+    `,
+      replacements
+    );
+    // console.log("posts", posts);
+    return {
+      posts: posts.slice(0, realLimit),
+      hasMore: posts.length === realLimitPlusOne,
+    };
   }
   @Query(() => Post, { nullable: true })
   // Arg("id") the ID can be changed to whatever you want, it will reflect the name you put in localhost:4000/graphql.

@@ -1,13 +1,15 @@
-import { ObjectType, Field, Int } from "type-graphql";
+import { Field, Int, ObjectType } from "type-graphql";
 import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
   BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
   ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn
 } from "typeorm";
+import { Updoot } from "./Updoot";
 import { User } from "./User";
 
 // ObjectType and fields https://typegraphql.com/docs/types-and-fields.html
@@ -28,6 +30,9 @@ export class Post extends BaseEntity {
   @Field()
   @Column()
   text!: string;
+
+  @OneToMany(() => Updoot, (updoot) => updoot.post)
+  updoots: Updoot[];
 
   @Field()
   @Column({ type: "int", default: 0 })
