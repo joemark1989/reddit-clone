@@ -1,21 +1,17 @@
-import { Field, Int, ObjectType } from "type-graphql";
+import { ObjectType, Field, Int } from "type-graphql";
 import {
-  BaseEntity,
-  Column,
-  CreateDateColumn,
   Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  BaseEntity,
   ManyToOne,
   OneToMany,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn
 } from "typeorm";
-import { Updoot } from "./Updoot";
 import { User } from "./User";
+import { Updoot } from "./Updoot";
 
-// ObjectType and fields https://typegraphql.com/docs/types-and-fields.html
-// ObjectType marks the Post class as Type that is known from the GQL SDL.
-// Field is just you creating a field and naming what it is going to be for GQL and Field() is how you expose it to GQL.
-// extends BaseEnitiy is from typeorm and it allows use to type commands like Post.find() etc.
 @ObjectType()
 @Entity()
 export class Post extends BaseEntity {
@@ -31,9 +27,6 @@ export class Post extends BaseEntity {
   @Column()
   text!: string;
 
-  @OneToMany(() => Updoot, (updoot) => updoot.post)
-  updoots: Updoot[];
-
   @Field()
   @Column({ type: "int", default: 0 })
   points!: number;
@@ -48,6 +41,9 @@ export class Post extends BaseEntity {
   @Field()
   @ManyToOne(() => User, (user) => user.posts)
   creator: User;
+
+  @OneToMany(() => Updoot, (updoot) => updoot.post)
+  updoots: Updoot[];
 
   @Field(() => String)
   @CreateDateColumn()
