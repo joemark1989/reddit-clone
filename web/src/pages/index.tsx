@@ -1,9 +1,15 @@
 import {
+  ChevronDownIcon,
+  ChevronUpIcon,
+  DeleteIcon,
+  EditIcon,
+} from "@chakra-ui/icons";
+import {
   Box,
   Button,
   Flex,
   Heading,
-  Icon,
+  IconButton,
   Link,
   Stack,
   Text,
@@ -12,7 +18,13 @@ import { withUrqlClient } from "next-urql";
 import NextLink from "next/link";
 import React from "react";
 import { Layout } from "../components/Layout";
-import { usePostsQuery } from "../generated/graphql";
+import { UpdootSection } from "../components/UpdootSection";
+import {
+  useDeletePosstMutation,
+  useMeQuery,
+  usePostsQuery,
+  useUpdatePostMutation,
+} from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 
 const Index = () => {
@@ -20,9 +32,13 @@ const Index = () => {
     limit: 15,
     cursor: null as string | null,
   });
+  // renamed this to meData to avoid collisons
+  const [{ data: meData }] = useMeQuery();
   const [{ data, fetching }] = usePostsQuery({
     variables: post,
   });
+  const [, deletePost] = useDeletePosstMutation();
+  const [, updatePost] = useUpdatePostMutation();
 
   if (!fetching && !data) {
     return <div>No data to display... weird contact site admin.</div>;
@@ -30,30 +46,57 @@ const Index = () => {
 
   return (
     <Layout>
-      <Flex align="center">
-        <Heading>Reddit Clone</Heading>
-        <NextLink href="/create-post">
-          <Button ml="auto" colorScheme="teal">
-            <Link>Create Post</Link>
-          </Button>
-        </NextLink>
-      </Flex>
-      <br />
       {!data && fetching ? (
         <div>loading...</div>
       ) : (
         <Stack>
-          {data!.posts.posts.map((x) => (
-            <Flex p={5} key={x.id} shadow="md" borderWidth="1px">
-              <Box>
-                <Icon name="chevron-up"></Icon>
-                <Icon></Icon>
-                <Heading fontSize="xl">{x.title}</Heading>
-                <Text mt={2}>{x.creator.username}</Text>
-                <Text mt={4}>{x.textSnippet}</Text>
-              </Box>
-            </Flex>
-          ))}
+          {data!.posts.posts.map((x) =>
+            !x ? null : (
+              <Flex p={5} key={x.id} shadow="md" borderWidth="1px">
+                <UpdootSection post={x} />
+                <Box flex={1}>
+                  <NextLink href="/post/[id]" as={`/post/${x.id}`}>
+                    <Link>
+                      <Heading fontSize="xl">{x.title}</Heading>
+                    </Link>
+                  </NextLink>
+                  <Text mt={2}>{x.creator.username}</Text>
+                  <Flex align="center">
+                    <Text flex={1} mt={4}>
+                      {x.textSnippet}
+                    </Text>
+                    {meData?.me?.id !== x.creator.id ? null : (
+                      <Box ml="auto">
+                        <NextLink
+                          href="/post/edit/[id]"
+                          as={`/post/edit/${x.id}`}
+                        >
+                          <EditIcon
+                            color="blue.400"
+                            w={7}
+                            h={7}
+                            aria-label="Edit Post"
+                            cursor="pointer"
+                            mr={4}
+                          />
+                        </NextLink>
+                        <DeleteIcon
+                          color="red.500"
+                          w={7}
+                          h={7}
+                          aria-label="Delete Post"
+                          onClick={() => {
+                            deletePost({ id: x.id });
+                          }}
+                          cursor="pointer"
+                        />
+                      </Box>
+                    )}
+                  </Flex>
+                </Box>
+              </Flex>
+            )
+          )}
         </Stack>
       )}
       {data && data.posts.hasMore ? (
