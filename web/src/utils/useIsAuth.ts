@@ -3,11 +3,11 @@ import React from "react";
 import { useMeQuery } from "../generated/graphql";
 
 export const useIsAuth = () => {
-  const [{ data, fetching }] = useMeQuery();
+  const { data, loading } = useMeQuery();
   React.useEffect(() => {
-    if (!fetching && !data?.me) {
+    if (!loading && !data?.me) {
       // this tells next.js where to go after a login
       router.replace("/login?next=" + router.pathname);
     }
-  }, [fetching, data, router]);
+  }, [loading, data, router]);
 };
