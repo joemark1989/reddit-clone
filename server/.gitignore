@@ -3,3 +3,5 @@ dist
 log
 .log
 yarn-error.log
+.env
+deploy.sh
