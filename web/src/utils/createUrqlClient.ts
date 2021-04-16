@@ -8,7 +8,6 @@
 // } from "urql";
 // import { pipe, tap } from "wonka";
 // import {
-//   DeletePosstMutationVariables,
 //   LoginMutation,
 //   LogoutMutation,
 //   MeDocument,

@@ -11,4 +11,4 @@ To watch for changes on the server: yarn watch
 
 To store cookies, install Redis on your machine.
 
-navigate to http://localhost:3000/graphql to make changes on the DB.
+navigate to http://localhost:4000/graphql to make changes on the DB.
