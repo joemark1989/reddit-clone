@@ -31,7 +31,8 @@ const main = async () => {
   });
 
   // this runs migrations manually
-  // await conn.runMigrations();
+
+  (await __prod__) ? conn.runMigrations() : null;
 
   //await Post.delete({});
 
@@ -56,9 +57,7 @@ const main = async () => {
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years
         httpOnly: true,
         sameSite: "lax",
-        // TODO I need to set an env variable for secrue / domain as it wont work on dev if it's https
-        // TODO and similarly if prod is true it wont work on ponderrcode since I am on localhost.
-        secure: !__prod__, // cookie only works in https good for prod. Maybe use ENV_VAR to turn this true / false.
+        secure: __prod__, // cookie only works in https good for prod. Maybe use ENV_VAR to turn this true / false.
         domain: __prod__ ? ".pondercode.club" : "localhost",
         // domain: __prod__ ? ".pondercode.club" : ".localhost:3000",
       },
