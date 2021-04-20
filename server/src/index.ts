@@ -31,7 +31,8 @@ const main = async () => {
   });
 
   // this runs migrations manually
-  // await conn.runMigrations();
+
+  (await __prod__) ? conn.runMigrations() : null;
 
   //await Post.delete({});
 
@@ -56,8 +57,9 @@ const main = async () => {
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years
         httpOnly: true,
         sameSite: "lax",
-        secure: !__prod__, // cookie only works in https good for prod. Maybe use ENV_VAR to turn this true / false.
-        domain: __prod__ ? ".pondercode.club" : undefined,
+        secure: __prod__, // cookie only works in https good for prod. Maybe use ENV_VAR to turn this true / false.
+        domain: __prod__ ? ".pondercode.club" : "localhost",
+        // domain: __prod__ ? ".pondercode.club" : ".localhost:3000",
       },
       saveUninitialized: false,
       secret: process.env.SESSION_SECRET,
