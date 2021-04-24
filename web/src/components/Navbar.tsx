@@ -1,4 +1,12 @@
-import { Box, Button, Flex, Heading, Link } from "@chakra-ui/react";
+import {
+  Avatar,
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Link,
+  Stack,
+} from "@chakra-ui/react";
 import React from "react";
 import NextLink from "next/link";
 import { useLogoutMutation, useMeQuery } from "../generated/graphql";
@@ -21,12 +29,14 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
     body = (
       <>
         <NextLink href="/login">
-          <Link mr={2} color="white">
+          <Button as={Link} mr={4} variant="solid" backgroundColor="blue.400">
             Login
-          </Link>
+          </Button>
         </NextLink>
         <NextLink href="register">
-          <Link color="white">Register</Link>
+          <Button as={Link} mr={4} variant="solid" backgroundColor="green.300">
+            Register
+          </Button>
         </NextLink>
       </>
     );
@@ -35,14 +45,16 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
     body = (
       <Flex align="center">
         <NextLink href="/create-post">
-          <Button as={Link} mr={4} variant="outline">
+          <Button as={Link} mr={4} variant="solid" backgroundColor="green.300">
             Create Post
           </Button>
         </NextLink>
-        <Box mr={3}>{data.me.username}</Box>
+        <Stack direction="row">
+          <Avatar name={data.me.username} mr={3}></Avatar>
+        </Stack>
         <Button
-          variant="link"
-          color="white"
+          variant="solid"
+          backgroundColor="red.300"
           onClick={async () => {
             await logout();
             await apolloClent.resetStore();
@@ -55,7 +67,14 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
     );
   }
   return (
-    <Flex bg="blue.600" position="sticky" top={0} zIndex={999} p={4}>
+    <Flex
+      background="gray.200"
+      position="sticky"
+      top={0}
+      zIndex={999}
+      p={4}
+      boxShadow="xl"
+    >
       <Flex flex={1} m="auto" align="center" maxW={800}>
         <NextLink href="/">
           <Link>
