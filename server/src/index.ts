@@ -25,17 +25,16 @@ const main = async () => {
     type: "postgres",
     logging: true,
     url: process.env.DATABASE_URL,
-    // synchronize: true,
+    synchronize: true,
     migrations: [path.join(__dirname, "./migrations/*")],
     entities: [Post, User, Updoot],
   });
 
   // this runs migrations manually
 
-  (await __prod__) ? conn.runMigrations() : null;
+  await conn.runMigrations()
 
-  //await Post.delete({});
-
+  // await Post.delete({});
   const app = express();
   const RedisStore = connectRedis(session);
   const redis = new Redis(process.env.REDIS_URL);

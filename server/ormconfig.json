@@ -3,8 +3,12 @@
   "host": "localhost",
   "port": 5432,
   "username": "postgres",
-  "password": "password",
-  "database": "reddit-clone3",
-  "entities": ["dist/entities/*.js"],
-  "migrations": ["dist/migrations/*.js"]
+  "password": "abc123",
+  "database": "reddit",
+  "entities": [
+    "dist/entities/*.js"
+  ],
+  "migrations": [
+    "dist/migrations/*.js"
+  ]
 }
