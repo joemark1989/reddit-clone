@@ -24,6 +24,7 @@ const Index = () => {
     notifyOnNetworkStatusChange: true,
   });
 
+
   if (!loading && !data) {
     return <div>{error?.message}</div>;
   }
