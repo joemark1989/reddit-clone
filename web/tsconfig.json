@@ -1,33 +1,33 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "esnext",
+    /* Language and Environment */
+    "target": "ES2017",
+    /* Modules */
+    "module": "commonjs",
+    "rootDir": ".",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
+    /* JavaScript Support */
+    "allowJs": true,
+    /* Emit */
+    "declaration": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    /* Interop Constraints */
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    /* Type Checking */
+    "strict": true,
+    "skipLibCheck": true,
+    "tsBuildInfoFile": ".tsbuildinfo",
     "incremental": true
   },
   "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "src/utils/createWithApollo.js",
-    "src/pages/500.js",
-    "src/pages/404.js"
+    "functions",
+    "utils"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "__tests__/**"
   ]
 }
