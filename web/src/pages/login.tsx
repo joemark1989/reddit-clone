@@ -7,7 +7,7 @@ import { InputField } from "../components/InputField";
 import { Wrapper } from "../components/Wrapper";
 import { MeDocument, MeQuery, useLoginMutation } from "../generated/graphql";
 import { toErrorMap } from "../utils/toErrorMap";
-import { withApollo } from "../utils/withApollo";
+import withApollo from "../utils/withApollo";
 
 const Login: React.FC<{}> = ({ }) => {
   const [login] = useLoginMutation();

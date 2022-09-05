@@ -8,7 +8,7 @@ import { Layout } from "../components/Layout";
 import { TextAreaBox } from "../components/TextAreaField";
 import { useCreatePostMutation } from "../generated/graphql";
 import { useIsAuth } from "../utils/useIsAuth";
-import { withApollo } from "../utils/withApollo";
+import withApollo from "../utils/withApollo";
 
 const CreatePost: React.FC<{}> = ({ }) => {
   const [createPost] = useCreatePostMutation();

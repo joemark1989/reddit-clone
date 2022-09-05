@@ -23,7 +23,8 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "src/utils/createWithApollo.js",
+    "src/utils/createWithApollo.jsx",
+    "src/utils/withApollo.ts",
     "src/pages/500.js",
     "src/pages/404.js"
   ],

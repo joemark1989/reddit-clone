@@ -4,6 +4,7 @@ import React from "react";
 export type WrapperVariant = "small" | "regular";
 interface WrapperProps {
   variant?: WrapperVariant;
+  children?: any;
 }
 
 export const Wrapper: React.FC<WrapperProps> = ({

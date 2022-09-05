@@ -6,9 +6,9 @@ import { InputField } from "../components/InputField";
 import { Wrapper } from "../components/Wrapper";
 import { MeDocument, MeQuery, useRegisterMutation } from "../generated/graphql";
 import { toErrorMap } from "../utils/toErrorMap";
-import { withApollo } from "../utils/withApollo";
+import withApollo from "../utils/withApollo";
 
-const Register: React.FC<{}> = ({}) => {
+const Register: React.FC<{}> = ({ }) => {
   const [register] = useRegisterMutation();
   const router = useRouter();
   return (

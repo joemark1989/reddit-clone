@@ -10,9 +10,9 @@ import {
   useUpdatePostMutation,
 } from "../../../generated/graphql";
 import useGetIntId from "../../../utils/useGetIntId";
-import { withApollo } from "../../../utils/withApollo";
+import withApollo from "../../../utils/withApollo";
 
-const EditPost = ({}) => {
+const EditPost = () => {
   const router = useRouter();
   const intId = useGetIntId();
   const { data, loading } = usePostQuery({
