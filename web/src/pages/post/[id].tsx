@@ -3,9 +3,9 @@ import React from "react";
 import { EditDeletePostButtons } from "../../components/EditDeletePostButtons";
 import { Layout } from "../../components/Layout";
 import { useGetPostFromUrl } from "../../utils/useGetPostFromUrl";
-import { withApollo } from "../../utils/withApollo";
+import withApollo from "../../utils/withApollo";
 
-export const Post = ({}) => {
+export const Post = () => {
   const { data, error, loading } = useGetPostFromUrl();
   if (loading) {
     return (

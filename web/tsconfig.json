@@ -26,7 +26,8 @@
     "src/utils/createWithApollo.jsx",
     "src/utils/withApollo.ts",
     "src/pages/500.js",
-    "src/pages/404.js"
+    "src/pages/404.js",
+    "src/utils/useIServer.ts"
   ],
   "exclude": [
     "node_modules"

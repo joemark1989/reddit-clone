@@ -10,7 +10,7 @@ import { useCreatePostMutation } from "../generated/graphql";
 import { useIsAuth } from "../utils/useIsAuth";
 import withApollo from "../utils/withApollo";
 
-const CreatePost: React.FC<{}> = ({ }) => {
+const CreatePost = () => {
   const [createPost] = useCreatePostMutation();
   useIsAuth();
   const router = useRouter();

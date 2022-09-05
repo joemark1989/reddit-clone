@@ -8,7 +8,7 @@ import { MeDocument, MeQuery, useRegisterMutation } from "../generated/graphql";
 import { toErrorMap } from "../utils/toErrorMap";
 import withApollo from "../utils/withApollo";
 
-const Register: React.FC<{}> = ({ }) => {
+const Register = () => {
   const [register] = useRegisterMutation();
   const router = useRouter();
   return (

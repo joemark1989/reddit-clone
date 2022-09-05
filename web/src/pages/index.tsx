@@ -7,13 +7,13 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import withApollo from "../utils/withApollo";
 import NextLink from "next/link";
 import React from "react";
 import { EditDeletePostButtons } from "../components/EditDeletePostButtons";
 import { Layout } from "../components/Layout";
 import { UpdootSection } from "../components/UpdootSection";
 import { usePostsQuery } from "../generated/graphql";
+import withApollo from "../utils/withApollo"
 
 
 const Index = () => {
@@ -105,4 +105,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default withApollo({ ssr: true })(Index);
