@@ -1,19 +1,21 @@
 import {
   Box,
   Button,
+  CircularProgress,
   Flex,
   Heading,
   Link,
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { withApollo } from "../utils/withApollo";
 import NextLink from "next/link";
 import React from "react";
 import { EditDeletePostButtons } from "../components/EditDeletePostButtons";
 import { Layout } from "../components/Layout";
 import { UpdootSection } from "../components/UpdootSection";
 import { usePostsQuery } from "../generated/graphql";
+import withApollo from "../utils/withApollo"
+
 
 const Index = () => {
   const { data, error, loading, fetchMore, variables } = usePostsQuery({
@@ -24,15 +26,18 @@ const Index = () => {
     notifyOnNetworkStatusChange: true,
   });
 
-
   if (!loading && !data) {
-    return <div>{error?.message}</div>;
+    return <Box>{error?.message}</Box>;
   }
 
+  // React.useEffect(() =>{
+
+  // },[])
+
   return (
-    <Layout>
+    <Layout >
       {!data && loading ? (
-        <div>loading...</div>
+        <CircularProgress isIndeterminate color='green.300' />
       ) : (
         <Stack>
           {data!.posts.posts.map((x) =>

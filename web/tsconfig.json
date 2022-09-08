@@ -23,8 +23,14 @@
     "incremental": true
   },
   "include": [
-    "functions",
-    "utils"
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "src/utils/createWithApollo.jsx",
+    "src/utils/withApollo.ts",
+    "src/pages/500.js",
+    "src/pages/404.js",
+    "src/utils/useIServer.ts"
   ],
   "exclude": [
     "node_modules",

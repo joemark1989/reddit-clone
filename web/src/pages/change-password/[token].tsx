@@ -12,9 +12,9 @@ import {
   useChangePasswordMutation,
 } from "../../generated/graphql";
 import { toErrorMap } from "../../utils/toErrorMap";
-import { withApollo } from "../../utils/withApollo";
+import withApollo from "../../utils/withApollo";
 
-const ChangePassword: NextPage = () => {
+const ChangePassword = () => {
   const router = useRouter();
   const [changePassword] = useChangePasswordMutation();
   const [tokenError, setTokenError] = useState("");
