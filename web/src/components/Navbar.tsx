@@ -21,12 +21,21 @@ export const Navbar: React.FC<NavbarProps> = ({ }) => {
     body = (
       <>
         <NextLink href="/login">
-          <Link mr={2} color="white">
-            Login
-          </Link>
+        <Button
+          variant="link"
+          color="black"
+        >
+          Login
+        </Button>
         </NextLink>
         <NextLink href="register">
-          <Link color="white">Register</Link>
+        <Button
+          variant="link"
+          color="black"
+          ml={4}
+        >
+          Register
+        </Button>
         </NextLink>
       </>
     );
@@ -35,14 +44,14 @@ export const Navbar: React.FC<NavbarProps> = ({ }) => {
     body = (
       <Flex align="center">
         <NextLink href="/create-post">
-          <Button as={Link} mr={4} variant="outline">
+          <Button as={Link} mr={4} variant="solid" colorScheme={"teal"}>
             Create Post
           </Button>
         </NextLink>
         <Avatar mr={3} name={data.me.username}></Avatar>
         <Button
           variant="link"
-          color="white"
+          color="black"
           onClick={async () => {
             await logout();
             await apolloClent.resetStore();
@@ -55,7 +64,7 @@ export const Navbar: React.FC<NavbarProps> = ({ }) => {
     );
   }
   return (
-    <Flex bg="blue.600" position="sticky" top={0} zIndex={999} p={4}>
+    <Flex bg="white" position="sticky" top={0} zIndex={999} p={4} shadow="md">
       <Flex flex={1} m="auto" align="center" maxW={800}>
         <NextLink href="/">
           <Link>
