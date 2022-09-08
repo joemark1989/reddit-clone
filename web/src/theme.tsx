@@ -15,7 +15,6 @@ const theme = extendTheme({
     black: '#16161D',
   },
   initialColorMode: 'light',
-  useSystemColorMode: true,
   fonts,
   icons: {
     logo: {
