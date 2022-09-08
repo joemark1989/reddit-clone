@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   Flex,
   Heading,
   Link,
@@ -25,15 +26,18 @@ const Index = () => {
     notifyOnNetworkStatusChange: true,
   });
 
-
   if (!loading && !data) {
-    return <div>{error?.message}</div>;
+    return <Box>{error?.message}</Box>;
   }
+
+  // React.useEffect(() =>{
+
+  // },[])
 
   return (
     <Layout >
       {!data && loading ? (
-        <div>loading...</div>
+        <CircularProgress isIndeterminate color='green.300' />
       ) : (
         <Stack>
           {data!.posts.posts.map((x) =>
