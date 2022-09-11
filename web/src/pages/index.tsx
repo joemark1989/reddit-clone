@@ -23,7 +23,10 @@ const Index = () => {
       limit: 15,
       cursor: null,
     },
-    notifyOnNetworkStatusChange: true,
+    // turning this to false resolved the loading of new data when loging out.
+    // I could add some logic to determine when someone is logging out.
+    // However, it doesn't seem this being set to true had any real need.
+    notifyOnNetworkStatusChange: false,
   });
 
   if (!loading && !data) {
