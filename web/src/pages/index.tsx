@@ -33,10 +33,6 @@ const Index = () => {
     return <Box>{error?.message}</Box>;
   }
 
-  // React.useEffect(() =>{
-
-  // },[])
-
   return (
     <Layout >
       {!data && loading ? (

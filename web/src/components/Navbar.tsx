@@ -1,19 +1,25 @@
-import { Avatar, Box, Button, Flex, Heading, Link } from "@chakra-ui/react";
+import { Avatar, Box, Button, color, Flex, Heading, IconButton, Link, useColorMode, useColorModeValue } from "@chakra-ui/react";
 import React from "react";
 import NextLink from "next/link";
 import { useLogoutMutation, useMeQuery } from "../generated/graphql";
 import { useIsServer } from "../utils/useIServer"
 import { useRouter } from "next/router";
 import { useApolloClient } from "@apollo/client";
+import { EditIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
 
 interface NavbarProps { }
 
 export const Navbar: React.FC<NavbarProps> = ({ }) => {
+  const { colorMode, toggleColorMode } = useColorMode()
   const router = useRouter();
   const [logout, { loading: logoutFetching }] = useLogoutMutation();
   const { data, loading } = useMeQuery({ skip: useIsServer() });
   const apolloClent = useApolloClient();
   let body = null;
+  const textColor = useColorModeValue("black","white")
+  const bg = useColorModeValue("white","black")
+
+
   //data loading
   if (loading) {
     //user not logged in
@@ -23,7 +29,7 @@ export const Navbar: React.FC<NavbarProps> = ({ }) => {
         <NextLink href="/login">
         <Button
           variant="link"
-          color="black"
+          color={textColor}
         >
           Login
         </Button>
@@ -31,7 +37,7 @@ export const Navbar: React.FC<NavbarProps> = ({ }) => {
         <NextLink href="register">
         <Button
           variant="link"
-          color="black"
+          color={textColor}
           ml={4}
         >
           Register
@@ -51,7 +57,7 @@ export const Navbar: React.FC<NavbarProps> = ({ }) => {
         <Avatar mr={3} name={data.me.username}></Avatar>
         <Button
           variant="link"
-          color="black"
+          color={textColor}
           onClick={async () => {
             await logout();
             await apolloClent.resetStore();
@@ -64,14 +70,20 @@ export const Navbar: React.FC<NavbarProps> = ({ }) => {
     );
   }
   return (
-    <Flex bg="white" position="sticky" top={0} zIndex={999} p={4} shadow="md">
+    <Flex bg={bg} position="sticky" top={0} zIndex={999} p={4} shadow="md">
       <Flex flex={1} m="auto" align="center" maxW={800}>
         <NextLink href="/">
           <Link>
-            <Heading color={"black"}>Reddit Clone</Heading>
+            <Heading size={"lg"} color={textColor}>Reddit Clone</Heading>
           </Link>
         </NextLink>
         <Box ml={"auto"}>{body}</Box>
+        <IconButton
+          aria-label="Edit Post"
+          icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon/>}
+          ml={4}
+          onClick={toggleColorMode}
+        />
       </Flex>
     </Flex>
   );
