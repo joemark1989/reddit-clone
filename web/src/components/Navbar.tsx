@@ -50,11 +50,11 @@ export const Navbar: React.FC<NavbarProps> = ({ }) => {
     body = (
       <Flex align="center">
         <NextLink href="/create-post">
-          <Button as={Link} mr={4} variant="solid" colorScheme={"teal"}>
+          <Button size="sm" as={Link} mr={4} variant="solid" colorScheme={"teal"}>
             Create Post
           </Button>
         </NextLink>
-        <Avatar mr={3} name={data.me.username}></Avatar>
+        <Avatar size={{base: "sm", md:"md"}} mr={2} name={data.me.username}></Avatar>
         <Button
           variant="link"
           color={textColor}
