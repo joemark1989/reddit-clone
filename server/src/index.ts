@@ -32,7 +32,7 @@ const main = async () => {
 
   // this runs migrations manually
 
-  await conn.runMigrations()
+  (await __prod__) ? conn.runMigrations() : null;
 
   // await Post.delete({});
   const app = express();
