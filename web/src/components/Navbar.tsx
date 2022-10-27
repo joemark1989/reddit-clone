@@ -89,6 +89,9 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
             >
               Logout
             </MenuItem>
+            <MenuItem>
+              <NextLink href="/profile">Profile</NextLink>
+            </MenuItem>
           </MenuList>
         </Menu>
       </Flex>
