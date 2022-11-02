@@ -1,28 +1,27 @@
+import { useApolloClient } from "@apollo/client";
+import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import {
-  forwardRef,
+  Avatar,
   AvatarProps,
   Box,
   Button,
+  ChakraComponent,
   Flex,
+  forwardRef,
   Heading,
   IconButton,
   Link,
   Menu,
+  MenuButton,
   MenuItem,
   MenuList,
   useColorMode,
   useColorModeValue,
-  MenuButton,
-  Avatar,
-  ChakraComponent,
-  // Avatar,
 } from "@chakra-ui/react";
-import React from "react";
 import NextLink from "next/link";
+import React from "react";
 import { useLogoutMutation, useMeQuery } from "../generated/graphql";
 import { useIsServer } from "../utils/useIServer";
-import { useApolloClient } from "@apollo/client";
-import { ChevronDownIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
 
 type SpanComponent = ChakraComponent<"span", {}>;
 const CustomAvatar = forwardRef<AvatarProps, "span">((props, ref) => (

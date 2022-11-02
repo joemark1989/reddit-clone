@@ -1,13 +1,14 @@
+import { ApolloCache } from "@apollo/client";
+import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
+import { Flex, IconButton } from "@chakra-ui/react";
+import gql from "graphql-tag";
 import React, { useState } from "react";
 import {
   PostSnippetFragment,
+  useMeQuery,
   useVoteMutation,
   VoteMutation,
 } from "../generated/graphql";
-import gql from "graphql-tag";
-import { ApolloCache } from "@apollo/client";
-import { Flex, IconButton } from "@chakra-ui/react";
-import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 
 interface UpdootSectionProps {
   post: PostSnippetFragment;
@@ -57,6 +58,7 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
     "updoot-loading" | "downdoot-loading" | "not-loading"
   >("not-loading");
   const [vote] = useVoteMutation();
+  const { data } = useMeQuery();
   return (
     <Flex direction="column" justifyContent="center" alignItems="center" mr={4}>
       <IconButton
@@ -77,7 +79,14 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
         variant={post.voteStatus === 1 ? "unstyled" : undefined}
         isLoading={loadingState === "updoot-loading"}
         aria-label="updoot post"
-        icon={<ChevronUpIcon color={post.voteStatus === 1 ? "green" : undefined} w={6} h={6} />}
+        icon={
+          <ChevronUpIcon
+            color={post.voteStatus === 1 ? "green" : undefined}
+            w={6}
+            h={6}
+          />
+        }
+        disabled={data?.me?.username === undefined}
       />
       {post.points}
       <IconButton
@@ -95,10 +104,17 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
           });
           setLoadingState("not-loading");
         }}
+        disabled={data?.me?.username === undefined}
         variant={post.voteStatus === -1 ? "unstyled" : undefined}
         isLoading={loadingState === "downdoot-loading"}
         aria-label="downdoot post"
-        icon={<ChevronDownIcon w={6} h={6}  color={post.voteStatus === -1 ? "red" : undefined}/>}
+        icon={
+          <ChevronDownIcon
+            w={6}
+            h={6}
+            color={post.voteStatus === -1 ? "red" : undefined}
+          />
+        }
       />
     </Flex>
   );
