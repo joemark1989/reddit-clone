@@ -67,8 +67,8 @@ export class UserResolver {
         errors: [{ field: "token", message: "token expired" }],
       };
     }
-    const userIdNum = +userId;
-    const user = await User.findOne(userIdNum);
+    const id = +userId;
+    const user = await User.findOneBy({id})
     if (!user) {
       return {
         errors: [{ field: "token", message: "user no longer exists" }],
@@ -76,7 +76,7 @@ export class UserResolver {
     }
     // at the end if all checks pass, change the password and log user in.
     User.update(
-      { id: userIdNum },
+      { id: id },
       {
         password: await argon2.hash(newPassword),
       }
@@ -85,7 +85,7 @@ export class UserResolver {
     await redis.del(key);
     // this is where it logs the user in if you want the user to type the PW again....
     req.session.userId = user.id; // Then Remove this line
-    return { user };
+    return {user};
   }
 
   @Mutation(() => Boolean)
@@ -121,8 +121,9 @@ export class UserResolver {
     if (!req.session.userId) {
       return null;
     }
+    const id = req.session.userId
     // return promise of the user
-    return User.findOne(req.session.userId);
+    return User.findOneBy({id});
   }
 
   @Mutation(() => UserResponse)

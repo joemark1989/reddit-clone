@@ -151,7 +151,7 @@ export class PostResolver {
 
     // in psql there can be multiple schemas inside a db
     // in this case you may have to use public.nameOfSchemaVariable in this case mine was public.user
-
+    //TODO need to update this as getConnection is deprecated.
     const posts = await getConnection().query(
       `
         select p.*
@@ -162,6 +162,7 @@ export class PostResolver {
     `,
       replacements
     );
+    console.log(posts)
     // console.log("posts", posts);
     return {
       posts: posts.slice(0, realLimit),
@@ -170,8 +171,8 @@ export class PostResolver {
   }
   @Query(() => Post, { nullable: true })
   // Arg("id") the ID can be changed to whatever you want, it will reflect the name you put in localhost:4000/graphql.
-  post(@Arg("id", () => Int) id: number): Promise<Post | undefined> {
-    return Post.findOne(id);
+  post(@Arg("id", () => Int) id: number): Promise<Post | null> {
+    return Post.findOneBy({id});
   }
   @Mutation(() => Post)
   @UseMiddleware(isAuth)
@@ -223,4 +224,34 @@ export class PostResolver {
     await Post.delete({ id, creatorId: req.session.userId });
     return true;
   }
+
+@Query(() => Post, { nullable: true })
+async topPosts(): Promise<Post | null> {
+
+  // in psql there can be multiple schemas inside a db
+  // in this case you may have to use public.nameOfSchemaVariable in this case mine was public.user
+  // using getRawEntities and .then(res => res) worked. Need to find better soltion tho
+  const top4Posts = await Post.
+  createQueryBuilder()
+  .select("*")
+  .from(Post,"post")
+  .orderBy("post.points", "DESC")
+  .limit(4).execute()
+
+  console.log(top4Posts)
+
+  // console.log(top4Posts)
+  // const posts = await dataSource ()
+  // .createQueryBuilder()
+  // .getMany()
+  // .set({ title, text })
+  // .where('id = :id and "creatorId" = :creatorId', {
+  //   id,
+  //   creatorId: req.session.userId,
+  // })
+  // .returning("*")
+  // .execute();
+  // console.log("posts", posts);
+  return top4Posts
+}
 }
