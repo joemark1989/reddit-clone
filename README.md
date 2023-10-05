@@ -1,3 +1,4 @@
+<b>Note this project is older and may not work properly.</b>
 # reddit-clone
 
 You may have to change the config.
